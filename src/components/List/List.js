@@ -31,7 +31,7 @@ class List extends React.Component{
     }
 
     save = (e) =>{
-        localStorage.setItem('list'+ Math.random(), this.state.list)
+        localStorage.setItem('list'+ Math.random(), JSON.stringify(this.state.list))
         window.location.reload();
     }
 
@@ -40,27 +40,35 @@ class List extends React.Component{
         window.location.reload();
     }
 
+    checked = (e) =>{
+        // if(e.target.checked){
+        //     e.target.parentNode.style.color = 'green'
+        // }
+        e.target.checked ? e.target.parentNode.style.color = 'green' : e.target.parentNode.style.color = 'black'
+    }
+
     render(){
-            console.log(localStorage)
-            console.log(this.state.list)
-        
         return(
             <div className="list">
                 <input onKeyPress={this.keyPress} type="text" />
-                <ul class="list-group">
+                <ul className="list-group">
                     {this.state.list.map((item, index) =>
-
-                        <li class="list-group-item" key={index}>{item} - <button class="btn btn-danger" value={index} onClick={this.delete}>Supprimer</button></li>
+                        <li className="list-group-item" key={index}>{item} - <button className="btn btn-danger" value={index} onClick={this.delete}>Supprimer</button></li>
 
                     )}
                 </ul>
-                <button class="btn btn-success" onClick={this.save}>Save</button>
+                <button className="btn btn-success" onClick={this.save}>Save</button>
                 <div>
                 {Object.keys(localStorage).map(key =>
-                    <p key={key}>{key} : {localStorage[key]} <button class="btn btn-danger" value={key} onClick={this.deleteSaved}>Supprimer</button> </p>
+                    <table key={key}>{key} : {JSON.parse(localStorage[key]).map((underList, i) => 
+                        <tbody>
+                            <tr key={i}>{underList} <input onChange={this.checked} type="checkbox" /></tr>
+                        </tbody>
+                    )}
+                    <button className="btn btn-danger" value={key} onClick={this.deleteSaved}>Supprimer</button> </table>
                 )}
                 </div>
-                <button class="btn btn-danger" onClick={this.clearAll}>Tout supprimer</button>
+                <button className="btn btn-danger" onClick={this.clearAll}>Tout supprimer</button>
             </div>
         )
     }
